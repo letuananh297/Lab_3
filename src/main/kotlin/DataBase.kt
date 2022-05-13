@@ -7,12 +7,10 @@ class DataBase : ContactService {
     private val mapContact: MutableMap<Person, MutableList<Contact>> = mutableMapOf()
 
     override fun addContact(person: Person, contact: Contact) {
-        if (mapContact.contains(person)) {
-            mapContact[person]!!.add(contact)
-        } else {
+        if (!mapContact.contains(person)) {
             mapContact[person] = mutableListOf()
-            mapContact[person]!!.add(contact)
         }
+        mapContact[person]?.add(contact)
     }
 
     override fun addPhone(person: Person, number: String, type: PhoneType) {
@@ -39,10 +37,10 @@ class DataBase : ContactService {
         if (!mapContact.contains(person)) {
             error("$person is not exist.")
         } else {
-            if (!mapContact[person]!!.contains(contact)) {
+            if (mapContact[person]?.contains(contact) == false) {
                 error("$person does not have $contact.")
             } else {
-                mapContact[person]!!.remove(contact)
+                mapContact[person]?.remove(contact)
                 log.info("$person's contact has been deleted.")
             }
         }
@@ -52,7 +50,7 @@ class DataBase : ContactService {
         if (!mapContact.contains(person)) {
             error("$person is not exist.")
         } else {
-            mapContact[person]!!.clear()
+            mapContact[person]?.clear()
             log.info("All $person's contacts have been deleted.")
         }
     }
@@ -70,7 +68,7 @@ class DataBase : ContactService {
         if (!mapContact.contains(person)) {
             error("$person is not exist.")
         } else {
-            return mapContact[person]!!.toList()
+            return mapContact[person]?.toList() ?: emptyList()
         }
     }
 
@@ -79,7 +77,7 @@ class DataBase : ContactService {
             error("$person is not exist.")
         } else {
             val listPhone: MutableList<Contact.Phone> = mutableListOf()
-            mapContact[person]!!.forEach {
+            mapContact[person]?.forEach {
                 if (it is Contact.Phone) {
                     listPhone.add(it)
                 }
@@ -93,7 +91,7 @@ class DataBase : ContactService {
             error("$person is not exist.")
         } else {
             val listEmail: MutableList<Contact.Email> = mutableListOf()
-            mapContact[person]!!.forEach {
+            mapContact[person]?.forEach {
                 if (it is Contact.Email) {
                     listEmail.add(it)
                 }
@@ -107,7 +105,7 @@ class DataBase : ContactService {
             error("$person is not exist.")
         } else {
             val listAddress: MutableList<Contact.Address> = mutableListOf()
-            mapContact[person]!!.forEach {
+            mapContact[person]?.forEach {
                 if (it is Contact.Address) {
                     listAddress.add(it)
                 }
@@ -121,7 +119,7 @@ class DataBase : ContactService {
             error("$person is not exist.")
         } else {
             val listLink: MutableList<Contact.ProfileLink> = mutableListOf()
-            mapContact[person]!!.forEach {
+            mapContact[person]?.forEach {
                 if (it is Contact.ProfileLink) {
                     listLink.add(it)
                 }
